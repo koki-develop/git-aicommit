@@ -11,4 +11,5 @@ dependencies = [
     "langchain-ollama>=1.0.0",
     "poml>=0.0.8",
     "pydantic>=2.12.4",
+    "rich>=14.2.0",
 ]
