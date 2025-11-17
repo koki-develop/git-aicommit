@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.2](https://github.com/koki-develop/git-aicommit/compare/v0.0.1...v0.0.2) (2025-11-17)
+
+
+### Features
+
+* Release v0.0.2 ([8196ce5](https://github.com/koki-develop/git-aicommit/commit/8196ce5766e7070a222c50b620cff92aab7ad335))
+
 ## 0.0.1 (2025-11-17)
 
 
