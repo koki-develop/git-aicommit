@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/koki-develop/git-aicommit/compare/v0.0.3...v0.0.4) (2025-11-17)
+
+
+### Bug Fixes
+
+* remove poml dependency and related imports ([2b25b0d](https://github.com/koki-develop/git-aicommit/commit/2b25b0d43a37b537abf1e6e431b081d14235e398))
+
 ## [0.0.3](https://github.com/koki-develop/git-aicommit/compare/v0.0.2...v0.0.3) (2025-11-17)
 
 
