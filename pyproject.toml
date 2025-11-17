@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "git-aicommit"
-version = "0.0.1"
+version = "0.0.2"
 authors = [
     { name = "Koki Sato", email = "kou.pg.0131@gmail.com" },
 ]
