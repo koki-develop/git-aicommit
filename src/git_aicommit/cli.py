@@ -55,7 +55,7 @@ def root():
 
             while True:
                 key = readchar.readkey()
-                if not key in ("c", "r", "q"):
+                if key not in ("c", "r", "q"):
                     continue
                 break
 
