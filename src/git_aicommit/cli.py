@@ -1,4 +1,5 @@
 from xml.sax.saxutils import escape as xml_escape
+from importlib.metadata import version
 import click
 from rich.prompt import Confirm, Prompt
 from rich.console import Console
@@ -11,7 +12,8 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_ollama import ChatOllama
 
 
-@click.command()
+@click.command("git-aicommit", help="Generate commit messages using AI.")
+@click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 def root():
     config = load_config()
 
