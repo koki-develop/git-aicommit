@@ -70,7 +70,7 @@ def root():
                 message = ai.generate_commit_message(
                     recent_logs=recent_logs, diff=diff, history=history
                 )
-            history.append((AIMessage(message)))
+            history.append(AIMessage(message))
             _preview_message(message)
 
             action = _read_action()
