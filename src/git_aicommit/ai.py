@@ -3,7 +3,6 @@ from langchain_core.messages import BaseMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field
-from poml import Prompt
 
 
 class Commit(BaseModel):
@@ -17,16 +16,13 @@ class AI:
     def generate_commit_message(
         self, recent_logs: list[str], diff: str, history: list[BaseMessage]
     ) -> str:
-        system_prompt = Prompt()
-        with system_prompt.role():
-            system_prompt.text("You are an excellent software engineer.")
-        with system_prompt.task():
-            system_prompt.text(
-                "Generate an appropriate commit message based on the provided diff and recent commit logs from the user."
-            )
         prompt_template = ChatPromptTemplate.from_messages(
             [
-                ("system", system_prompt.dump_xml()),
+                (
+                    "system",
+                    "<role>You are an excellent software engineer.</role>\n"
+                    + "<task>Generate an appropriate commit message based on the provided diff and recent commit logs from the user.</task>",
+                ),
                 ("human", "<recent-logs>{logs}</recent-logs><diff>{diff}</diff>"),
                 MessagesPlaceholder("history"),
             ]
