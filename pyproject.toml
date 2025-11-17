@@ -37,6 +37,5 @@ include = ["git_aicommit*"]
 
 [dependency-groups]
 dev = [
-    "click-man>=0.5.1",
     "ruff>=0.14.5",
 ]
