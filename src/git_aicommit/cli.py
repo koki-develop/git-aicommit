@@ -21,12 +21,14 @@ console = Console()
 
 def _preview_message(message: str) -> None:
     console.print(
+        Markdown("**Generated Commit Message:**\n\n"),
         Padding(
             Markdown(
-                f"```\n{message}\n```\n\n`c`: Commit message / `r`: Regenerate / `q`: Quit"
+                f"```\n{message}\n```\n\n"
+                + "`c`: Commit message / `r`: Regenerate / `q`: Quit"
             ),
-            (0, 1),
-        )
+            (1, 1, 0, 1),
+        ),
     )
 
 
