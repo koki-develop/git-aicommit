@@ -20,4 +20,4 @@ class Git:
         )
 
     def commit(self, message: str) -> None:
-        self.repo.index.commit(message)
+        self.repo.git.execute(["git", "commit", "-m", message], as_process=False)
