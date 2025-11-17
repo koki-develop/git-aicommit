@@ -86,7 +86,7 @@ def root():
 
             elif action == "regenerate":
                 feedback = Prompt.ask(
-                    "Please provide feedback to improve the commit message"
+                    "[bold]Provide feedback to refine the commit message[/bold]"
                 )
                 if not feedback.strip():
                     raise AbortCommitError()
