@@ -9,10 +9,32 @@ Generate commit messages using AI.
 ## Installation
 
 ```console
-$ pip install git+https://github.com/koki-develop/git-aicommit
+$ pip install git+https://github.com/koki-develop/git-aicommit.git
 ```
 
 ## Usage
+
+### Setup
+
+Create a configuration file.
+
+```yaml
+# aicommit.yml
+ollama:
+  model: "<model>" # Required
+  base_url: "http://localhost:11434" # Optional
+  temperature: 0 # Optional
+```
+
+Place a configuration file in your repository or any parent directory.  
+Supported file names:
+
+- `aicommit.yml`
+- `aicommit.yaml`
+- `.aicommit.yml`
+- `.aicommit.yaml`
+
+### Generate a Commit Message
 
 Run `git aicommit` in your git repository to generate a commit message using AI:
 
