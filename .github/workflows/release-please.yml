@@ -1,0 +1,30 @@
+name: Release Please
+
+permissions: {}
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Release Please
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      should-publish: ${{ steps.release-please.outputs.release_created }}
+    permissions:
+      contents: write # for create a release
+      pull-requests: write # for open a pull request
+      issues: write # for create labels
+    steps:
+      - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4.4.0
+        id: release-please
+        with:
+          release-type: python
+          token: ${{ github.token }}
