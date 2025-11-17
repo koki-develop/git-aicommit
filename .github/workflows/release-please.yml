@@ -18,6 +18,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       should-publish: ${{ steps.release-please.outputs.release_created }}
+      tag: ${{ steps.release-please.outputs.tag_name }}
     permissions:
       contents: write # for create a release
       pull-requests: write # for open a pull request
@@ -35,13 +36,14 @@ jobs:
     if: needs.release-please.outputs.should-publish == 'true'
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           persist-credentials: false
       - uses: jdx/mise-action@9dc7d5dd454262207dea3ab5a06a3df6afc8ff26 # v3.4.1
       - run: uv build --verbose
-      - run: uv publish --verbose
+      - run: gh release upload "${TAG_NAME}" dist/git_aicommit-* --clobber
         env:
-          UV_PUBLISH_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag }}
