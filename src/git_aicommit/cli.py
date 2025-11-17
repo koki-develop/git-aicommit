@@ -61,6 +61,7 @@ def root():
                 if key not in ("c", "r", "q"):
                     continue
                 break
+            print()
 
             if key == "c":
                 with Halo(text="Committing changes...", spinner="dots"):
@@ -69,7 +70,6 @@ def root():
                 break
 
             elif key == "r":
-                print()
                 feedback = Prompt.ask(
                     "Please provide feedback to improve the commit message"
                 )
