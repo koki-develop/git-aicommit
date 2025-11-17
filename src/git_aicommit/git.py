@@ -20,4 +20,5 @@ class Git:
         )
 
     def commit(self, message: str) -> None:
+        # NOTE: `self.repo.index.commit` does not support commit signing
         self.repo.git.execute(["git", "commit", "-m", message], as_process=False)
