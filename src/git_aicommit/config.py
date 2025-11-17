@@ -1,7 +1,7 @@
 from typing import Optional, Literal
 from pathlib import Path
 from yaml import safe_load
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, SecretStr, model_validator
 
 
 class OllamaConfig(BaseModel):
@@ -12,7 +12,7 @@ class OllamaConfig(BaseModel):
 
 class OpenAIConfig(BaseModel):
     model: str
-    api_key: str
+    api_key: SecretStr
     temperature: float = 0.0
 
 
@@ -24,9 +24,13 @@ class Config(BaseModel):
     @model_validator(mode="after")
     def validate_provider_config(self):
         if self.provider == "ollama" and self.ollama is None:
-            raise ValueError("ollama configuration is required when provider is 'ollama'")
+            raise ValueError(
+                "ollama configuration is required when provider is 'ollama'"
+            )
         if self.provider == "openai" and self.openai is None:
-            raise ValueError("openai configuration is required when provider is 'openai'")
+            raise ValueError(
+                "openai configuration is required when provider is 'openai'"
+            )
         return self
 
 
