@@ -24,3 +24,8 @@ git-aicommit = "git_aicommit.cli:root"
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["git_aicommit*"]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.14.5",
+]
