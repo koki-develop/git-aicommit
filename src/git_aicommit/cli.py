@@ -1,4 +1,5 @@
 import sys
+from typing import Literal
 from xml.sax.saxutils import escape as xml_escape
 from importlib.metadata import version
 import readchar
@@ -15,6 +16,30 @@ from git_aicommit.error import AbortCommitError
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_ollama import ChatOllama
 
+console = Console()
+
+
+def _preview_message(message: str) -> None:
+    console.print(
+        Padding(
+            Markdown(
+                f"```\n{message}\n```\n\n`c`: Commit message / `r`: Regenerate / `q`: Quit"
+            ),
+            (0, 1),
+        )
+    )
+
+
+def _read_action() -> Literal["commit", "regenerate", "quit"]:
+    while True:
+        key = readchar.readkey()
+        if key == "c":
+            return "commit"
+        elif key == "r":
+            return "regenerate"
+        elif key == "q":
+            return "quit"
+
 
 @click.command("git-aicommit", help="Generate commit messages using AI.")
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
@@ -30,7 +55,6 @@ def root():
             )
         )
         git = Git(".")
-        console = Console()
 
         if not git.is_staged():
             console.print("No staged changes found.")
@@ -47,29 +71,18 @@ def root():
                     recent_logs=recent_logs, diff=diff, history=history
                 )
             history.append((AIMessage(message)))
-            console.print(
-                Padding(
-                    Markdown(
-                        f"```\n{message}\n```\n\n`c`: Commit message / `r`: Regenerate / `q`: Quit"
-                    ),
-                    (0, 1),
-                )
-            )
+            _preview_message(message)
 
-            while True:
-                key = readchar.readkey()
-                if key not in ("c", "r", "q"):
-                    continue
-                break
+            action = _read_action()
             print()
 
-            if key == "c":
+            if action == "commit":
                 with Halo(text="Committing changes...", spinner="dots"):
                     git.commit(message)
                 console.print("[bold green]Committed successfully![/bold green]")
                 break
 
-            elif key == "r":
+            elif action == "regenerate":
                 feedback = Prompt.ask(
                     "Please provide feedback to improve the commit message"
                 )
@@ -81,8 +94,9 @@ def root():
                 )
                 continue
 
-            elif key == "q":
+            elif action == "quit":
                 raise AbortCommitError()
+
     except AbortCommitError:
         print("Aborted commit.")
         sys.exit(1)
