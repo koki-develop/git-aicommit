@@ -3,6 +3,7 @@ from xml.sax.saxutils import escape as xml_escape
 from importlib.metadata import version
 import readchar
 import click
+from halo import Halo
 from rich.prompt import Prompt
 from rich.console import Console
 from rich.markdown import Markdown
@@ -40,9 +41,10 @@ def root():
 
         history: list[BaseMessage] = []
         while True:
-            message = ai.generate_commit_message(
-                recent_logs=recent_logs, diff=diff, history=history
-            )
+            with Halo(text="Generating commit message...", spinner="dots"):
+                message = ai.generate_commit_message(
+                    recent_logs=recent_logs, diff=diff, history=history
+                )
             history.append((AIMessage(message)))
             console.print(
                 Padding(
@@ -60,7 +62,8 @@ def root():
                 break
 
             if key == "c":
-                git.commit(message)
+                with Halo(text="Committing changes...", spinner="dots"):
+                    git.commit(message)
                 console.print("[bold green]Committed successfully![/bold green]")
                 break
 
