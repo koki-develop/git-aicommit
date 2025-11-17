@@ -1,4 +1,5 @@
 from xml.sax.saxutils import escape as xml_escape
+from langchain_core.messages import BaseMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from pydantic import BaseModel, Field
@@ -14,7 +15,7 @@ class AI:
         self.model = model
 
     def generate_commit_message(
-        self, recent_logs: list[str], diff: str, history: list[tuple[str, str]]
+        self, recent_logs: list[str], diff: str, history: list[BaseMessage]
     ) -> str:
         system_prompt = Prompt()
         with system_prompt.role():
@@ -38,10 +39,7 @@ class AI:
                     f"<log>{xml_escape(log)}</log>" for log in recent_logs
                 ),
                 "diff": xml_escape(diff),
-                "history": [
-                    (role, f"<feedback>{xml_escape(content)}</feedback>")
-                    for role, content in history
-                ],
+                "history": history,
             }
         )  # type: ignore
         return commit.message
