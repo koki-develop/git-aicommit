@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/koki-develop/git-aicommit/compare/v0.1.0...v0.1.1) (2025-11-17)
+
+
+### Documentation
+
+* add CLAUDE.md with project overview, architecture, and usage instructions ([0147819](https://github.com/koki-develop/git-aicommit/commit/0147819a1775be3600126549d9234603f19f7039))
+
 ## [0.1.0](https://github.com/koki-develop/git-aicommit/compare/v0.0.4...v0.1.0) (2025-11-17)
 
 
