@@ -5,8 +5,13 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "git-aicommit"
 version = "0.0.1"
-description = "Add your description here"
+authors = [
+    { name = "Koki Sato", email = "kou.pg.0131@gmail.com" },
+]
+description = "Generate commit messages using AI."
 readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
 requires-python = ">=3.13"
 dependencies = [
     "click>=8.3.1",
@@ -19,6 +24,10 @@ dependencies = [
     "readchar>=4.2.1",
     "rich>=14.2.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/koki-develop/git-aicommit"
+Issues = "https://github.com/koki-develop/git-aicommit/issues"
 
 [project.scripts]
 git-aicommit = "git_aicommit.cli:root"
