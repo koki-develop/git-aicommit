@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0](https://github.com/koki-develop/git-aicommit/compare/v0.0.4...v0.1.0) (2025-11-17)
+
+
+### Features
+
+* Release v0.1.0 ([3187290](https://github.com/koki-develop/git-aicommit/commit/3187290e63039cecd4f6a49f5f0a916aa9f06a44))
+
+
+### Documentation
+
+* add badges, installation and usage instructions to README ([abc265f](https://github.com/koki-develop/git-aicommit/commit/abc265f3027f06eecef0f493a1b429034309c845))
+
 ## [0.0.4](https://github.com/koki-develop/git-aicommit/compare/v0.0.3...v0.0.4) (2025-11-17)
 
 
