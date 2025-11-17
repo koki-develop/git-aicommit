@@ -1,0 +1,2 @@
+class AbortCommitError(Exception):
+    pass

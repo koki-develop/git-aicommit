@@ -11,6 +11,7 @@ from rich.padding import Padding
 from git_aicommit.config import load_config
 from git_aicommit.git import Git
 from git_aicommit.ai import AI
+from git_aicommit.error import AbortCommitError
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_ollama import ChatOllama
 
@@ -73,8 +74,7 @@ def root():
                     "Please provide feedback to improve the commit message"
                 )
                 if not feedback.strip():
-                    console.print("Aborting commit.")
-                    return
+                    raise AbortCommitError()
                 print()
                 history.append(
                     HumanMessage(f"<feedback>{xml_escape(feedback)}</feedback>")
@@ -82,9 +82,10 @@ def root():
                 continue
 
             elif key == "q":
-                console.print("Aborting commit.")
-                return
-
+                raise AbortCommitError()
+    except AbortCommitError:
+        print("Aborted commit.")
+        sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(130)
 
