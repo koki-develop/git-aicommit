@@ -4,9 +4,9 @@ from rich.prompt import Confirm, Prompt
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
-from src.lib.config import load_config
-from src.lib.git import Git
-from src.lib.ai import AI
+from git_aicommit.config import load_config
+from git_aicommit.git import Git
+from git_aicommit.ai import AI
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_ollama import ChatOllama
 
