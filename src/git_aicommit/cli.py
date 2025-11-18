@@ -19,6 +19,7 @@ from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_anthropic import ChatAnthropic
+from langchain_aws import ChatBedrockConverse
 
 console = Console()
 
@@ -71,7 +72,7 @@ def _load_model(config: Config) -> BaseChatModel:
             raise ValueError("Google GenAI configuration is missing.")
         return ChatGoogleGenerativeAI(
             model=config.google_genai.model,
-            api_key=config.google_genai.api_key.get_secret_value(),
+            google_api_key=config.google_genai.api_key,
             temperature=config.google_genai.temperature,
         )
 
@@ -79,9 +80,20 @@ def _load_model(config: Config) -> BaseChatModel:
         if config.anthropic is None:
             raise ValueError("Anthropic configuration is missing.")
         return ChatAnthropic(
-            model=config.anthropic.model,
-            api_key=config.anthropic.api_key.get_secret_value(),
+            model_name=config.anthropic.model,
+            api_key=config.anthropic.api_key,
             temperature=config.anthropic.temperature,
+            timeout=None,
+            stop=None,
+        )
+
+    elif config.provider == "aws-bedrock":
+        if config.aws_bedrock is None:
+            raise ValueError("AWS Bedrock configuration is missing.")
+        return ChatBedrockConverse(
+            model=config.aws_bedrock.model,
+            region_name=config.aws_bedrock.region,
+            temperature=config.aws_bedrock.temperature,
         )
 
     else:

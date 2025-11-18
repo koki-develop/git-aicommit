@@ -18,6 +18,7 @@ dependencies = [
     "gitpython>=3.1.45",
     "halo>=0.0.31",
     "langchain-anthropic>=1.1.0",
+    "langchain-aws>=1.0.0",
     "langchain-core>=1.0.5",
     "langchain-google-genai>=3.0.3",
     "langchain-ollama>=1.0.0",

@@ -31,14 +31,21 @@ class AnthropicConfig(BaseModel):
     temperature: float = 0.0
 
 
+class BedrockConfig(BaseModel):
+    model: str
+    region: str
+    temperature: float = 0.0
+
+
 class Config(BaseModel):
-    provider: Literal["ollama", "openai", "google-genai", "anthropic"]
+    provider: Literal["ollama", "openai", "google-genai", "anthropic", "aws-bedrock"]
     ollama: Optional[OllamaConfig] = None
     openai: Optional[OpenAIConfig] = None
     google_genai: Optional[GoogleGenAIConfig] = Field(
         default=None, alias="google-genai"
     )
     anthropic: Optional[AnthropicConfig] = None
+    aws_bedrock: Optional[BedrockConfig] = Field(default=None, alias="aws-bedrock")
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> Self:
@@ -57,6 +64,10 @@ class Config(BaseModel):
         if self.provider == "anthropic" and self.anthropic is None:
             raise ValueError(
                 "anthropic configuration is required when provider is 'anthropic'"
+            )
+        if self.provider == "aws-bedrock" and self.aws_bedrock is None:
+            raise ValueError(
+                "aws-bedrock configuration is required when provider is 'aws-bedrock'"
             )
         return self
 
