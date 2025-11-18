@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.5.0](https://github.com/koki-develop/git-aicommit/compare/v0.4.0...v0.5.0) (2025-11-18)
+
+
+### Features
+
+* add `init` subcommand for config file generation ([#21](https://github.com/koki-develop/git-aicommit/issues/21)) ([1147a83](https://github.com/koki-develop/git-aicommit/commit/1147a837c419fdcd6456c6e0ff64ee4c71cadf0b))
+
+
+### Patches
+
+* centralize CLI error handling and improve config errors ([#23](https://github.com/koki-develop/git-aicommit/issues/23)) ([d131f63](https://github.com/koki-develop/git-aicommit/commit/d131f63b18f7b0d782101e529921a58c79ee792d))
+
 ## [0.4.0](https://github.com/koki-develop/git-aicommit/compare/v0.3.0...v0.4.0) (2025-11-18)
 
 
