@@ -20,8 +20,15 @@ class AI:
             [
                 (
                     "system",
-                    "<role>You are an excellent software engineer.</role>\n"
-                    + "<task>Generate an appropriate commit message based on the provided diff and recent commit logs from the user.</task>",
+                    "<persona>You are a seasoned software engineer and Git expert who writes precise commit messages.</persona>\n"
+                    + "<objectives>\n"
+                    + "  <objective>Study the provided diff to understand what changed and why.</objective>\n"
+                    + "  <objective>Return a single well-crafted commit message.</objective>\n"
+                    + "</objectives>\n"
+                    + "<guidelines>\n"
+                    + "  <guideline>Mirror the style conventions observed in the recent logs. (tense, tags, emoji, prefixes)</guideline>\n"
+                    + "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; each line should stay under 72 characters.</guideline>\n"
+                    + "</guidelines>",
                 ),
                 ("human", "<recent-logs>{logs}</recent-logs><diff>{diff}</diff>"),
                 MessagesPlaceholder("history"),
