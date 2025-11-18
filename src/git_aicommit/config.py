@@ -1,7 +1,7 @@
 from typing import Optional, Literal, Self
 from pathlib import Path
 from yaml import safe_load
-from pydantic import BaseModel, SecretStr, model_validator
+from pydantic import BaseModel, SecretStr, Field, model_validator
 
 
 class OllamaConfig(BaseModel):
@@ -16,10 +16,19 @@ class OpenAIConfig(BaseModel):
     temperature: float = 0.0
 
 
+class GoogleGenAIConfig(BaseModel):
+    model: str
+    api_key: SecretStr
+    temperature: float = 0.0
+
+
 class Config(BaseModel):
-    provider: Literal["ollama", "openai"]
+    provider: Literal["ollama", "openai", "google-genai"]
     ollama: Optional[OllamaConfig] = None
     openai: Optional[OpenAIConfig] = None
+    google_genai: Optional[GoogleGenAIConfig] = Field(
+        default=None, alias="google-genai"
+    )
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> Self:
@@ -30,6 +39,10 @@ class Config(BaseModel):
         if self.provider == "openai" and self.openai is None:
             raise ValueError(
                 "openai configuration is required when provider is 'openai'"
+            )
+        if self.provider == "google-genai" and self.google_genai is None:
+            raise ValueError(
+                "google-genai configuration is required when provider is 'google-genai'"
             )
         return self
 

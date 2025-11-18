@@ -10,6 +10,7 @@ Generate commit messages using AI.
 
 - [OpenAI](https://openai.com/)
 - [Ollama](https://ollama.com/)
+- [Google Generative AI](https://ai.google.dev)
 
 ## Installation
 
@@ -29,8 +30,8 @@ Create a configuration file.
 # aicommit.yml
 provider: openai
 openai:
-  model: "<model>" # Required
-  api_key: "sk-..." # Required
+  model: "<model>" # Required (e.g. "gpt-5", "gpt-4.1")
+  api_key: "<api-key>" # Required
   temperature: 0.0 # Optional (default: 0.0)
 ```
 
@@ -42,6 +43,17 @@ provider: ollama
 ollama:
   model: "<model>" # Required
   base_url: "http://localhost:11434" # Optional (default: http://localhost:11434)
+  temperature: 0.0 # Optional (default: 0.0)
+```
+
+#### Using Google GenAI
+
+```yaml
+# aicommit.yml
+provider: google-genai
+google-genai:
+  model: "<model>" # Required (e.g. "gemini-2.5-flash", "gemini-2.5-pro")
+  api_key: "<api-key>" # Required
   temperature: 0.0 # Optional (default: 0.0)
 ```
 
