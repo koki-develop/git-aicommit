@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.3.0](https://github.com/koki-develop/git-aicommit/compare/v0.2.0...v0.3.0) (2025-11-18)
+
+
+### Features
+
+* Support Google Generative AI ([#16](https://github.com/koki-develop/git-aicommit/issues/16)) ([c23efa2](https://github.com/koki-develop/git-aicommit/commit/c23efa25cf7e1938fff5253e7238f1508473d9aa))
+
+
+### Patches
+
+* clarify example in AI prompt guideline for style conventions ([3a96ef1](https://github.com/koki-develop/git-aicommit/commit/3a96ef18496bda27ef2abe4ae1230e7d9e7e808b))
+* update AI prompt to include detailed persona, objectives, and guidelines for generating precise commit messages ([1f54ea7](https://github.com/koki-develop/git-aicommit/commit/1f54ea7d919da1eb4e77efb018bc6e106cd9f757))
+
 ## [0.2.0](https://github.com/koki-develop/git-aicommit/compare/v0.1.1...v0.2.0) (2025-11-18)
 
 
