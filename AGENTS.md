@@ -57,9 +57,9 @@ The codebase follows a clean separation of concerns across 5 main modules:
   - **Config discovery**: Walks up directory tree from cwd to find config
   - Pydantic models:
     - `Config`: Contains `provider` (Literal["ollama", "openai", "google-genai"]) and optional provider-specific configs
-    - `OllamaConfig`: model, base_url, temperature
-    - `OpenAIConfig`: model, api_key, temperature
-    - `GoogleGenAIConfig`: model, api_key, temperature
+    - `OllamaConfig`: model, base-url, temperature
+    - `OpenAIConfig`: model, api-key, temperature
+    - `GoogleGenAIConfig`: model, api-key, temperature
   - Custom validator ensures the correct provider config is present based on `provider` field
 
 - **error.py** - Custom exceptions
@@ -85,7 +85,7 @@ Users must provide a configuration file at repository or parent directory level.
 provider: ollama
 ollama:
   model: "llama3.2"  # Required
-  base_url: "http://localhost:11434"  # Optional, defaults shown
+  base-url: "http://localhost:11434"  # Optional, defaults shown
   temperature: 0.0  # Optional
 ```
 
@@ -95,7 +95,7 @@ ollama:
 provider: openai
 openai:
   model: "gpt-4"  # Required
-  api_key: "sk-..."  # Required
+  api-key: "sk-..."  # Required
   temperature: 0.0  # Optional
 ```
 
@@ -105,7 +105,7 @@ openai:
 provider: google-genai
 google-genai:
   model: "gemini-2.5-flash"  # Required
-  api_key: "<google-api-key>"  # Required
+  api-key: "<google-api-key>"  # Required
   temperature: 0.0  # Optional
 ```
 

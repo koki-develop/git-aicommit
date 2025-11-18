@@ -6,19 +6,22 @@ from pydantic import BaseModel, SecretStr, Field, model_validator
 
 class OllamaConfig(BaseModel):
     model: str
-    base_url: str = "http://localhost:11434"
+    base_url: str = Field(
+        default="http://localhost:11434",
+        alias="base-url",
+    )
     temperature: float = 0.0
 
 
 class OpenAIConfig(BaseModel):
     model: str
-    api_key: SecretStr
+    api_key: SecretStr = Field(alias="api-key")
     temperature: float = 0.0
 
 
 class GoogleGenAIConfig(BaseModel):
     model: str
-    api_key: SecretStr
+    api_key: SecretStr = Field(alias="api-key")
     temperature: float = 0.0
 
 
