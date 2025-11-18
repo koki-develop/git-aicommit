@@ -15,11 +15,11 @@ from git_aicommit.ai import AI
 from git_aicommit.error import AbortCommitError
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.language_models import BaseChatModel
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
-from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_anthropic import ChatAnthropic
 from langchain_aws import ChatBedrockConverse
+from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 console = Console()
 
@@ -49,7 +49,36 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
 
 
 def _load_model(config: Config) -> BaseChatModel:
-    if config.provider == "ollama":
+    if config.provider == "aws-bedrock":
+        if config.aws_bedrock is None:
+            raise ValueError("AWS Bedrock configuration is missing.")
+        return ChatBedrockConverse(
+            model=config.aws_bedrock.model,
+            region_name=config.aws_bedrock.region,
+            temperature=config.aws_bedrock.temperature,
+        )
+
+    elif config.provider == "anthropic":
+        if config.anthropic is None:
+            raise ValueError("Anthropic configuration is missing.")
+        return ChatAnthropic(
+            model_name=config.anthropic.model,
+            api_key=config.anthropic.api_key,
+            temperature=config.anthropic.temperature,
+            timeout=None,
+            stop=None,
+        )
+
+    elif config.provider == "google-genai":
+        if config.google_genai is None:
+            raise ValueError("Google GenAI configuration is missing.")
+        return ChatGoogleGenerativeAI(
+            model=config.google_genai.model,
+            google_api_key=config.google_genai.api_key,
+            temperature=config.google_genai.temperature,
+        )
+
+    elif config.provider == "ollama":
         if config.ollama is None:
             raise ValueError("Ollama configuration is missing.")
         return ChatOllama(
@@ -65,35 +94,6 @@ def _load_model(config: Config) -> BaseChatModel:
             model=config.openai.model,
             api_key=config.openai.api_key,
             temperature=config.openai.temperature,
-        )
-
-    elif config.provider == "google-genai":
-        if config.google_genai is None:
-            raise ValueError("Google GenAI configuration is missing.")
-        return ChatGoogleGenerativeAI(
-            model=config.google_genai.model,
-            google_api_key=config.google_genai.api_key,
-            temperature=config.google_genai.temperature,
-        )
-
-    elif config.provider == "anthropic":
-        if config.anthropic is None:
-            raise ValueError("Anthropic configuration is missing.")
-        return ChatAnthropic(
-            model_name=config.anthropic.model,
-            api_key=config.anthropic.api_key,
-            temperature=config.anthropic.temperature,
-            timeout=None,
-            stop=None,
-        )
-
-    elif config.provider == "aws-bedrock":
-        if config.aws_bedrock is None:
-            raise ValueError("AWS Bedrock configuration is missing.")
-        return ChatBedrockConverse(
-            model=config.aws_bedrock.model,
-            region_name=config.aws_bedrock.region,
-            temperature=config.aws_bedrock.temperature,
         )
 
     else:

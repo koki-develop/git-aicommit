@@ -4,6 +4,24 @@ from yaml import safe_load
 from pydantic import BaseModel, SecretStr, Field, model_validator
 
 
+class AWSBedrockConfig(BaseModel):
+    model: str
+    region: str
+    temperature: float = 0.0
+
+
+class AnthropicConfig(BaseModel):
+    model: str
+    api_key: SecretStr = Field(alias="api-key")
+    temperature: float = 0.0
+
+
+class GoogleGenAIConfig(BaseModel):
+    model: str
+    api_key: SecretStr = Field(alias="api-key")
+    temperature: float = 0.0
+
+
 class OllamaConfig(BaseModel):
     model: str
     base_url: str = Field(
@@ -19,36 +37,30 @@ class OpenAIConfig(BaseModel):
     temperature: float = 0.0
 
 
-class GoogleGenAIConfig(BaseModel):
-    model: str
-    api_key: SecretStr = Field(alias="api-key")
-    temperature: float = 0.0
-
-
-class AnthropicConfig(BaseModel):
-    model: str
-    api_key: SecretStr = Field(alias="api-key")
-    temperature: float = 0.0
-
-
-class BedrockConfig(BaseModel):
-    model: str
-    region: str
-    temperature: float = 0.0
-
-
 class Config(BaseModel):
-    provider: Literal["ollama", "openai", "google-genai", "anthropic", "aws-bedrock"]
-    ollama: Optional[OllamaConfig] = None
-    openai: Optional[OpenAIConfig] = None
+    provider: Literal["aws-bedrock", "anthropic", "google-genai", "ollama", "openai"]
+    aws_bedrock: Optional[AWSBedrockConfig] = Field(default=None, alias="aws-bedrock")
+    anthropic: Optional[AnthropicConfig] = None
     google_genai: Optional[GoogleGenAIConfig] = Field(
         default=None, alias="google-genai"
     )
-    anthropic: Optional[AnthropicConfig] = None
-    aws_bedrock: Optional[BedrockConfig] = Field(default=None, alias="aws-bedrock")
+    ollama: Optional[OllamaConfig] = None
+    openai: Optional[OpenAIConfig] = None
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> Self:
+        if self.provider == "aws-bedrock" and self.aws_bedrock is None:
+            raise ValueError(
+                "aws-bedrock configuration is required when provider is 'aws-bedrock'"
+            )
+        if self.provider == "anthropic" and self.anthropic is None:
+            raise ValueError(
+                "anthropic configuration is required when provider is 'anthropic'"
+            )
+        if self.provider == "google-genai" and self.google_genai is None:
+            raise ValueError(
+                "google-genai configuration is required when provider is 'google-genai'"
+            )
         if self.provider == "ollama" and self.ollama is None:
             raise ValueError(
                 "ollama configuration is required when provider is 'ollama'"
@@ -56,18 +68,6 @@ class Config(BaseModel):
         if self.provider == "openai" and self.openai is None:
             raise ValueError(
                 "openai configuration is required when provider is 'openai'"
-            )
-        if self.provider == "google-genai" and self.google_genai is None:
-            raise ValueError(
-                "google-genai configuration is required when provider is 'google-genai'"
-            )
-        if self.provider == "anthropic" and self.anthropic is None:
-            raise ValueError(
-                "anthropic configuration is required when provider is 'anthropic'"
-            )
-        if self.provider == "aws-bedrock" and self.aws_bedrock is None:
-            raise ValueError(
-                "aws-bedrock configuration is required when provider is 'aws-bedrock'"
             )
         return self
 

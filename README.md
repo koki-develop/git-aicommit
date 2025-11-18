@@ -8,11 +8,11 @@ Generate commit messages using AI.
 
 ## Supported Providers
 
-- [OpenAI](https://openai.com/)
-- [Ollama](https://ollama.com/)
-- [Google Generative AI](https://ai.google.dev)
-- [Anthropic](https://www.anthropic.com/)
 - [Amazon Bedrock](https://aws.amazon.com/bedrock/)
+- [Anthropic](https://www.anthropic.com/)
+- [Google Generative AI](https://ai.google.dev)
+- [Ollama](https://ollama.com/)
+- [OpenAI](https://openai.com/)
 
 ## Installation
 
@@ -25,50 +25,6 @@ $ pip install git+https://github.com/koki-develop/git-aicommit.git
 ### Setup
 
 Create a configuration file.
-
-#### Using OpenAI
-
-```yaml
-# aicommit.yml
-provider: openai
-openai:
-  model: "<model>" # Required (e.g. "gpt-5", "gpt-4.1")
-  api-key: "<api-key>" # Required
-  temperature: 0.0 # Optional (default: 0.0)
-```
-
-#### Using Ollama
-
-```yaml
-# aicommit.yml
-provider: ollama
-ollama:
-  model: "<model>" # Required
-  base-url: "http://localhost:11434" # Optional (default: http://localhost:11434)
-  temperature: 0.0 # Optional (default: 0.0)
-```
-
-#### Using Google GenAI
-
-```yaml
-# aicommit.yml
-provider: google-genai
-google-genai:
-  model: "<model>" # Required (e.g. "gemini-2.5-flash", "gemini-2.5-pro")
-  api-key: "<api-key>" # Required
-  temperature: 0.0 # Optional (default: 0.0)
-```
-
-#### Using Anthropic
-
-```yaml
-# aicommit.yml
-provider: anthropic
-anthropic:
-  model: "<model>" # Required (e.g. "claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929")
-  api-key: "<api-key>" # Required
-  temperature: 0.0 # Optional (default: 0.0)
-```
 
 #### Using Amazon Bedrock
 
@@ -87,6 +43,50 @@ Configure AWS credentials via environment variables:
 export AWS_ACCESS_KEY_ID="<your-access-key>"
 export AWS_SECRET_ACCESS_KEY="<your-secret-key>"
 export AWS_SESSION_TOKEN="<your-session-token>" # Optional, for temporary credentials
+```
+
+#### Using Anthropic
+
+```yaml
+# aicommit.yml
+provider: anthropic
+anthropic:
+  model: "<model>" # Required (e.g. "claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929")
+  api-key: "<api-key>" # Required
+  temperature: 0.0 # Optional (default: 0.0)
+```
+
+#### Using Google GenAI
+
+```yaml
+# aicommit.yml
+provider: google-genai
+google-genai:
+  model: "<model>" # Required (e.g. "gemini-2.5-flash", "gemini-2.5-pro")
+  api-key: "<api-key>" # Required
+  temperature: 0.0 # Optional (default: 0.0)
+```
+
+#### Using Ollama
+
+```yaml
+# aicommit.yml
+provider: ollama
+ollama:
+  model: "<model>" # Required
+  base-url: "http://localhost:11434" # Optional (default: http://localhost:11434)
+  temperature: 0.0 # Optional (default: 0.0)
+```
+
+#### Using OpenAI
+
+```yaml
+# aicommit.yml
+provider: openai
+openai:
+  model: "<model>" # Required (e.g. "gpt-5", "gpt-4.1")
+  api-key: "<api-key>" # Required
+  temperature: 0.0 # Optional (default: 0.0)
 ```
 
 ---
