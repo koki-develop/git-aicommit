@@ -23,8 +23,11 @@ uv build
 # Run linting
 uv run ruff check
 
+# Initialize configuration file
+uv run git-aicommit init
+
 # Run the tool locally (after staging changes)
-uv run python -m git_aicommit.cli
+uv run git-aicommit
 ```
 
 ## Architecture
@@ -35,6 +38,9 @@ The codebase follows a clean separation of concerns across 5 main modules:
 
 - **cli.py** - Entry point and user interaction loop
   - Click-based CLI with rich terminal UI (using `rich` and `halo`)
+  - **CLI Structure**: Uses `@click.group()` with `invoke_without_command=True` to support both default behavior and subcommands
+    - Default (no subcommand): Generate commit message from staged changes
+    - `init` subcommand: Create configuration file template with all provider examples
   - Interactive loop: generate → preview → (commit|regenerate|quit)
   - Maintains conversation history for regeneration with feedback
   - Reads single keypress actions (c/r/q) via `readchar`
@@ -79,7 +85,9 @@ The codebase follows a clean separation of concerns across 5 main modules:
 
 ## Configuration
 
-Users must provide a configuration file at repository or parent directory level.
+Users can generate a configuration file template using `git-aicommit init`, which creates `aicommit.yml` with examples for all supported providers.
+
+Alternatively, users can manually create a configuration file at repository or parent directory level.
 
 ### Amazon Bedrock Example
 
@@ -138,6 +146,8 @@ openai:
 
 ## Key Implementation Details
 
+- **CLI Architecture**: Click group with `invoke_without_command=True` allows default behavior (commit message generation) while supporting subcommands (`init`)
+- **Init Command**: Creates `aicommit.yml` with all provider examples commented out; checks for existing config files before creation
 - **Multi-Provider Support**: Supports Amazon Bedrock, Anthropic, Google GenAI, Ollama, and OpenAI via LangChain's `BaseChatModel` abstraction
 - **Provider Selection**: `_load_model()` function in `cli.py` initializes the correct provider based on configuration
 - **Structured Output**: Uses `model.with_structured_output(Commit)` for reliable message extraction

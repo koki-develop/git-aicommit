@@ -24,7 +24,15 @@ $ pip install git+https://github.com/koki-develop/git-aicommit.git
 
 ### Setup
 
-Place a configuration file in your repository or any parent directory.
+You can create a configuration file template using the `init` command:
+
+```console
+$ git aicommit init
+```
+
+This will create an `aicommit.yml` file in the current directory with examples for all supported providers.
+
+Alternatively, you can manually place a configuration file in your repository or any parent directory.
 Supported file names:
 
 - `aicommit.yml`
