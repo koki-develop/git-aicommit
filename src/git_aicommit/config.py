@@ -1,7 +1,8 @@
 from typing import Optional, Literal, Self
 from pathlib import Path
 from yaml import safe_load
-from pydantic import BaseModel, SecretStr, Field, model_validator
+from pydantic import BaseModel, SecretStr, Field, ValidationError, model_validator
+from git_aicommit.error import InvalidConfigurationError
 
 
 class AWSBedrockConfig(BaseModel):
@@ -78,9 +79,18 @@ def load_config() -> Config:
         raise FileNotFoundError("Configuration file not found.")
 
     with open(config_path, "r") as f:
-        data = safe_load(f)
+        try:
+            data = safe_load(f)
+        except Exception as e:
+            raise InvalidConfigurationError(f"YAML parsing error: {str(e)}") from e
 
-    return Config(**data)
+    if data is None:
+        raise InvalidConfigurationError("Configuration file is empty.")
+
+    try:
+        return Config(**data)
+    except ValidationError as e:
+        raise InvalidConfigurationError(str(e)) from e
 
 
 def find_config_path() -> Optional[str]:
