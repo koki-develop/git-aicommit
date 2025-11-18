@@ -11,6 +11,7 @@ Generate commit messages using AI.
 - [OpenAI](https://openai.com/)
 - [Ollama](https://ollama.com/)
 - [Google Generative AI](https://ai.google.dev)
+- [Anthropic](https://www.anthropic.com/)
 
 ## Installation
 
@@ -53,6 +54,17 @@ ollama:
 provider: google-genai
 google-genai:
   model: "<model>" # Required (e.g. "gemini-2.5-flash", "gemini-2.5-pro")
+  api-key: "<api-key>" # Required
+  temperature: 0.0 # Optional (default: 0.0)
+```
+
+#### Using Anthropic
+
+```yaml
+# aicommit.yml
+provider: anthropic
+anthropic:
+  model: "<model>" # Required (e.g. "claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929")
   api-key: "<api-key>" # Required
   temperature: 0.0 # Optional (default: 0.0)
 ```

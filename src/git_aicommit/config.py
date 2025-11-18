@@ -25,13 +25,20 @@ class GoogleGenAIConfig(BaseModel):
     temperature: float = 0.0
 
 
+class AnthropicConfig(BaseModel):
+    model: str
+    api_key: SecretStr = Field(alias="api-key")
+    temperature: float = 0.0
+
+
 class Config(BaseModel):
-    provider: Literal["ollama", "openai", "google-genai"]
+    provider: Literal["ollama", "openai", "google-genai", "anthropic"]
     ollama: Optional[OllamaConfig] = None
     openai: Optional[OpenAIConfig] = None
     google_genai: Optional[GoogleGenAIConfig] = Field(
         default=None, alias="google-genai"
     )
+    anthropic: Optional[AnthropicConfig] = None
 
     @model_validator(mode="after")
     def validate_provider_config(self) -> Self:
@@ -46,6 +53,10 @@ class Config(BaseModel):
         if self.provider == "google-genai" and self.google_genai is None:
             raise ValueError(
                 "google-genai configuration is required when provider is 'google-genai'"
+            )
+        if self.provider == "anthropic" and self.anthropic is None:
+            raise ValueError(
+                "anthropic configuration is required when provider is 'anthropic'"
             )
         return self
 
