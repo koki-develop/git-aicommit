@@ -9,12 +9,14 @@ from rich.prompt import Prompt
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
-from git_aicommit.config import load_config
+from git_aicommit.config import load_config, Config
 from git_aicommit.git import Git
 from git_aicommit.ai import AI
 from git_aicommit.error import AbortCommitError
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+from langchain_core.language_models import BaseChatModel
 from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 
 console = Console()
 
@@ -43,19 +45,37 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
             return "quit"
 
 
+def _load_model(config: Config) -> BaseChatModel:
+    if config.provider == "ollama":
+        if config.ollama is None:
+            raise ValueError("Ollama configuration is missing.")
+        return ChatOllama(
+            model=config.ollama.model,
+            temperature=config.ollama.temperature,
+            base_url=config.ollama.base_url,
+        )
+
+    elif config.provider == "openai":
+        if config.openai is None:
+            raise ValueError("OpenAI configuration is missing.")
+        return ChatOpenAI(
+            model=config.openai.model,
+            api_key=config.openai.api_key,
+            temperature=config.openai.temperature,
+        )
+
+    else:
+        raise ValueError(f"Unsupported provider: {config.provider}")
+
+
 @click.command("git-aicommit", help="Generate commit messages using AI.")
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 def root():
     try:
         config = load_config()
+        model = _load_model(config)
 
-        ai = AI(
-            model=ChatOllama(
-                model=config.ollama.model,
-                temperature=config.ollama.temperature,
-                base_url=config.ollama.base_url,
-            )
-        )
+        ai = AI(model=model)
         git = Git(".")
 
         if not git.is_staged():
