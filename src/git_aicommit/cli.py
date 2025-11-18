@@ -18,6 +18,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 from langchain_google_genai import ChatGoogleGenerativeAI
+from langchain_anthropic import ChatAnthropic
 
 console = Console()
 
@@ -72,6 +73,15 @@ def _load_model(config: Config) -> BaseChatModel:
             model=config.google_genai.model,
             api_key=config.google_genai.api_key.get_secret_value(),
             temperature=config.google_genai.temperature,
+        )
+
+    elif config.provider == "anthropic":
+        if config.anthropic is None:
+            raise ValueError("Anthropic configuration is missing.")
+        return ChatAnthropic(
+            model=config.anthropic.model,
+            api_key=config.anthropic.api_key.get_secret_value(),
+            temperature=config.anthropic.temperature,
         )
 
     else:
