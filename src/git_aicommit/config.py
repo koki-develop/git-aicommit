@@ -2,7 +2,7 @@ from typing import Optional, Literal, Self
 from pathlib import Path
 from yaml import safe_load
 from pydantic import BaseModel, SecretStr, Field, ValidationError, model_validator
-from src.git_aicommit.error import InvalidConfigurationError
+from git_aicommit.error import InvalidConfigurationError
 
 
 class AWSBedrockConfig(BaseModel):
