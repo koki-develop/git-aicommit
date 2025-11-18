@@ -126,8 +126,6 @@ aws-bedrock:
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_SESSION_TOKEN` (optional, for temporary credentials)
 
-**Note**: You need to enable model access for your AWS account through the AWS Bedrock console before using this provider.
-
 ## Key Implementation Details
 
 - **Multi-Provider Support**: Supports Ollama, OpenAI, Google GenAI, Anthropic, and Amazon Bedrock via LangChain's `BaseChatModel` abstraction
