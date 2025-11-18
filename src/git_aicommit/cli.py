@@ -13,7 +13,11 @@ from rich.padding import Padding
 from git_aicommit.config import load_config, Config
 from git_aicommit.git import Git
 from git_aicommit.ai import AI
-from git_aicommit.error import AbortCommitError
+from git_aicommit.error import (
+    error_handle,
+    AbortCommitError,
+    ConfigurationAlreadyExistsError,
+)
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_anthropic import ChatAnthropic
@@ -104,66 +108,59 @@ def _load_model(config: Config) -> BaseChatModel:
 @click.group("git-aicommit", invoke_without_command=True)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
+@error_handle
 def root(ctx: click.Context):
     """Generate commit messages using AI."""
     if ctx.invoked_subcommand is not None:
         return
 
-    try:
-        config = load_config()
-        model = _load_model(config)
+    config = load_config()
+    model = _load_model(config)
 
-        ai = AI(model=model)
-        git = Git(".")
+    ai = AI(model=model)
+    git = Git(".")
 
-        if not git.is_staged():
-            console.print("No staged changes found.")
-            return
+    if not git.is_staged():
+        console.print("No staged changes found.")
+        return
 
-        diff = git.diff()
-        recent_logs = git.logs(max_count=10)
+    diff = git.diff()
+    recent_logs = git.logs(max_count=10)
 
-        history: list[BaseMessage] = []
-        while True:
-            with Halo(text="Generating commit message...", spinner="dots"):
-                message = ai.generate_commit_message(
-                    recent_logs=recent_logs, diff=diff, history=history
-                )
-            history.append(AIMessage(message))
-            _preview_message(message)
+    history: list[BaseMessage] = []
+    while True:
+        with Halo(text="Generating commit message...", spinner="dots"):
+            message = ai.generate_commit_message(
+                recent_logs=recent_logs, diff=diff, history=history
+            )
+        history.append(AIMessage(message))
+        _preview_message(message)
 
-            action = _read_action()
-            print()
+        action = _read_action()
+        print()
 
-            if action == "commit":
-                with Halo(text="Committing changes...", spinner="dots"):
-                    git.commit(message)
-                console.print("[bold green]Committed successfully![/bold green]")
-                break
+        if action == "commit":
+            with Halo(text="Committing changes...", spinner="dots"):
+                git.commit(message)
+            console.print("[bold green]Committed successfully![/bold green]")
+            break
 
-            elif action == "regenerate":
-                feedback = Prompt.ask(
-                    "[bold]Provide feedback to refine the commit message[/bold]"
-                )
-                if not feedback.strip():
-                    raise AbortCommitError()
-                print()
-                history.append(
-                    HumanMessage(f"<feedback>{xml_escape(feedback)}</feedback>")
-                )
-                continue
-
-            elif action == "quit":
+        elif action == "regenerate":
+            feedback = Prompt.ask(
+                "[bold]Provide feedback to refine the commit message[/bold]"
+            )
+            if not feedback.strip():
                 raise AbortCommitError()
+            print()
+            history.append(HumanMessage(f"<feedback>{xml_escape(feedback)}</feedback>"))
+            continue
 
-    except AbortCommitError:
-        print("Aborted commit.")
-        sys.exit(1)
-    except KeyboardInterrupt:
-        sys.exit(130)
+        elif action == "quit":
+            raise AbortCommitError()
 
 
 @root.command()
+@error_handle
 def init():
     """Initialize configuration file."""
     filenames = [
@@ -176,10 +173,7 @@ def init():
         config_file = Path.cwd() / filename
 
         if config_file.exists():
-            console.print(
-                f"[bold red]Configuration file already exists:[/bold red] {config_file}",
-            )
-            sys.exit(1)
+            raise ConfigurationAlreadyExistsError(config_file)
 
     # Sample configuration with all providers commented out
     sample_config = """# Uncomment and configure one of the providers below
