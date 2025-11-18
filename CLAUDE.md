@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-git-aicommit is a Python CLI tool that generates commit messages using AI. It analyzes staged git changes and recent commit history to produce contextually appropriate commit messages via Ollama.
+git-aicommit is a Python CLI tool that generates commit messages using AI. It analyzes staged git changes and recent commit history to produce contextually appropriate commit messages via AI providers (Ollama or OpenAI).
 
 ## Development Setup
 
@@ -40,9 +40,11 @@ The codebase follows a clean separation of concerns across 5 main modules:
   - Interactive loop: generate → preview → (commit|regenerate|quit)
   - Maintains conversation history for regeneration with feedback
   - Reads single keypress actions (c/r/q) via `readchar`
+  - `_load_model()` function: Initializes the appropriate AI model (Ollama or OpenAI) based on configuration
 
 - **ai.py** - LLM integration
-  - Uses LangChain with Ollama (`langchain-ollama`)
+  - Uses LangChain with AI providers (`langchain-ollama` or `langchain-openai`)
+  - Provider-agnostic: Accepts any `BaseChatModel` implementation
   - Structured output via Pydantic `Commit` model
   - Prompt includes: recent logs + diff + conversation history
   - XML escaping applied to all user inputs (security against prompt injection)
@@ -55,7 +57,11 @@ The codebase follows a clean separation of concerns across 5 main modules:
 - **config.py** - Configuration management
   - Loads from `.aicommit.yml` or `aicommit.yaml` (with/without leading dot)
   - **Config discovery**: Walks up directory tree from cwd to find config
-  - Pydantic models: `Config` → `OllamaConfig` (model, base_url, temperature)
+  - Pydantic models:
+    - `Config`: Contains `provider` (Literal["ollama", "openai"]) and optional provider-specific configs
+    - `OllamaConfig`: model, base_url, temperature
+    - `OpenAIConfig`: model, api_key, temperature
+  - Custom validator ensures the correct provider config is present based on `provider` field
 
 - **error.py** - Custom exceptions
   - `AbortCommitError`: User aborts commit operation
@@ -72,17 +78,32 @@ The codebase follows a clean separation of concerns across 5 main modules:
 
 ## Configuration
 
-Users must provide a configuration file at repository or parent directory level:
+Users must provide a configuration file at repository or parent directory level.
+
+### Ollama Example
 
 ```yaml
+provider: ollama
 ollama:
   model: "llama3.2"  # Required
   base_url: "http://localhost:11434"  # Optional, defaults shown
   temperature: 0.0  # Optional
 ```
 
+### OpenAI Example
+
+```yaml
+provider: openai
+openai:
+  model: "gpt-4"  # Required
+  api_key: "sk-..."  # Required
+  temperature: 0.0  # Optional
+```
+
 ## Key Implementation Details
 
+- **Multi-Provider Support**: Supports both Ollama and OpenAI via LangChain's `BaseChatModel` abstraction
+- **Provider Selection**: `_load_model()` function in `cli.py` initializes the correct provider based on configuration
 - **Structured Output**: Uses `model.with_structured_output(Commit)` for reliable message extraction
 - **Prompt Injection Protection**: All user input (feedback, diff, logs) is XML-escaped before including in prompts
 - **Conversation History**: LangChain `MessagesPlaceholder` enables multi-turn refinement
