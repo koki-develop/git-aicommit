@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 from typing import Literal
 from xml.sax.saxutils import escape as xml_escape
 from importlib.metadata import version
@@ -21,7 +22,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
 
-console = Console()
+console = Console(highlight=False)
 
 
 def _preview_message(message: str) -> None:
@@ -100,9 +101,14 @@ def _load_model(config: Config) -> BaseChatModel:
         raise ValueError(f"Unsupported provider: {config.provider}")
 
 
-@click.command("git-aicommit", help="Generate commit messages using AI.")
+@click.group("git-aicommit", invoke_without_command=True)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
-def root():
+@click.pass_context
+def root(ctx: click.Context):
+    """Generate commit messages using AI."""
+    if ctx.invoked_subcommand is not None:
+        return
+
     try:
         config = load_config()
         model = _load_model(config)
@@ -155,6 +161,68 @@ def root():
         sys.exit(1)
     except KeyboardInterrupt:
         sys.exit(130)
+
+
+@root.command()
+def init():
+    """Initialize configuration file."""
+    filenames = [
+        ".aicommit.yml",
+        "aicommit.yml",
+        ".aicommit.yaml",
+        "aicommit.yaml",
+    ]
+    for filename in filenames:
+        config_file = Path.cwd() / filename
+
+        if config_file.exists():
+            console.print(
+                f"[bold red]Configuration file already exists:[/bold red] {config_file}",
+            )
+            sys.exit(1)
+
+    # Sample configuration with all providers commented out
+    sample_config = """# Uncomment and configure one of the providers below
+
+# Amazon Bedrock
+# provider: aws-bedrock
+# aws-bedrock:
+#   model: "<model>" # Required (e.g. "us.anthropic.claude-sonnet-4-20250514-v1:0")
+#   region: "<region>" # Required (e.g. "us-west-2", "us-east-1")
+#   temperature: 0.0 # Optional (default: 0.0)
+
+# Anthropic
+# provider: anthropic
+# anthropic:
+#   model: "<model>" # Required (e.g. "claude-haiku-4-5-20251001", "claude-sonnet-4-5-20250929")
+#   api-key: "<api-key>" # Required
+#   temperature: 0.0 # Optional (default: 0.0)
+
+# Google GenAI
+# provider: google-genai
+# google-genai:
+#   model: "<model>" # Required (e.g. "gemini-2.5-flash", "gemini-2.5-pro")
+#   api-key: "<api-key>" # Required
+#   temperature: 0.0 # Optional (default: 0.0)
+
+# Ollama
+# provider: ollama
+# ollama:
+#   model: "<model>" # Required
+#   base-url: "http://localhost:11434" # Optional (default: http://localhost:11434)
+#   temperature: 0.0 # Optional (default: 0.0)
+
+# OpenAI
+# provider: openai
+# openai:
+#   model: "<model>" # Required (e.g. "gpt-5", "gpt-4.1")
+#   api-key: "<api-key>" # Required
+#   temperature: 0.0 # Optional (default: 0.0)
+"""
+
+    config_file = Path.cwd() / "aicommit.yml"
+    config_file.write_text(sample_config)
+    console.print(f"[bold green]Configuration file created:[/bold green] {config_file}")
 
 
 if __name__ == "__main__":
