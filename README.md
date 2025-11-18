@@ -24,7 +24,13 @@ $ pip install git+https://github.com/koki-develop/git-aicommit.git
 
 ### Setup
 
-Create a configuration file.
+Place a configuration file in your repository or any parent directory.
+Supported file names:
+
+- `aicommit.yml`
+- `aicommit.yaml`
+- `.aicommit.yml`
+- `.aicommit.yaml`
 
 #### Using Amazon Bedrock
 
@@ -88,16 +94,6 @@ openai:
   api-key: "<api-key>" # Required
   temperature: 0.0 # Optional (default: 0.0)
 ```
-
----
-
-Place a configuration file in your repository or any parent directory.  
-Supported file names:
-
-- `aicommit.yml`
-- `aicommit.yaml`
-- `.aicommit.yml`
-- `.aicommit.yaml`
 
 ### Generate a Commit Message
 
