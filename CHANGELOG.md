@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/koki-develop/git-aicommit/compare/v0.1.1...v0.2.0) (2025-11-18)
+
+
+### Features
+
+* Support OpenAI Provider ([#14](https://github.com/koki-develop/git-aicommit/issues/14)) ([35028d4](https://github.com/koki-develop/git-aicommit/commit/35028d4329d81992939157872d06aee2cae3cccb))
+
+
+### Documentation
+
+* Update readme ([965f5dd](https://github.com/koki-develop/git-aicommit/commit/965f5dd97e1fd92679dd1e2960d005942c9e2ed6))
+
 ## 0.1.1 (2025-11-17)
 
 
