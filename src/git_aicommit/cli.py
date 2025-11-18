@@ -72,7 +72,7 @@ def _load_model(config: Config) -> BaseChatModel:
             raise ValueError("Google GenAI configuration is missing.")
         return ChatGoogleGenerativeAI(
             model=config.google_genai.model,
-            api_key=config.google_genai.api_key.get_secret_value(),
+            google_api_key=config.google_genai.api_key,
             temperature=config.google_genai.temperature,
         )
 
