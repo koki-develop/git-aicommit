@@ -17,6 +17,7 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 
 console = Console()
 
@@ -62,6 +63,15 @@ def _load_model(config: Config) -> BaseChatModel:
             model=config.openai.model,
             api_key=config.openai.api_key,
             temperature=config.openai.temperature,
+        )
+
+    elif config.provider == "google-genai":
+        if config.google_genai is None:
+            raise ValueError("Google GenAI configuration is missing.")
+        return ChatGoogleGenerativeAI(
+            model=config.google_genai.model,
+            api_key=config.google_genai.api_key.get_secret_value(),
+            temperature=config.google_genai.temperature,
         )
 
     else:
