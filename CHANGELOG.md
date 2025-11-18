@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/koki-develop/git-aicommit/compare/v0.3.0...v0.4.0) (2025-11-18)
+
+
+### Features
+
+* add Amazon Bedrock provider support ([#20](https://github.com/koki-develop/git-aicommit/issues/20)) ([a665604](https://github.com/koki-develop/git-aicommit/commit/a66560497a64128a9b9ba99dfc5d1534b40c00dd))
+* add Anthropic provider support ([#19](https://github.com/koki-develop/git-aicommit/issues/19)) ([d34288f](https://github.com/koki-develop/git-aicommit/commit/d34288f41c670a42d308df8bae7d2cdd55226331))
+
+
+### Patches
+
+* switch config keys to kebab-case ([#17](https://github.com/koki-develop/git-aicommit/issues/17)) ([4774b49](https://github.com/koki-develop/git-aicommit/commit/4774b49ae097dcfd8d90bcc6f602d3139d798c52))
+
 ## [0.3.0](https://github.com/koki-develop/git-aicommit/compare/v0.2.0...v0.3.0) (2025-11-18)
 
 
