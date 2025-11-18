@@ -17,7 +17,6 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 from langchain_core.language_models import BaseChatModel
 from langchain_ollama import ChatOllama
 from langchain_openai import ChatOpenAI
-from pydantic import SecretStr
 
 console = Console()
 
