@@ -93,8 +93,7 @@ def root():
             return
 
         diff = git.diff()
-        recent_logs = git.logs()[-10:]
-        recent_logs.reverse()
+        recent_logs = git.logs(max_count=10)
 
         history: list[BaseMessage] = []
         while True:
