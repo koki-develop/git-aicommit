@@ -11,6 +11,11 @@
           "path": "uv.lock",
           "jsonpath": "$.package[?(@.name.value=='git-aicommit')].version"
         }
+      ],
+      "changelog-sections": [
+        { "type": "feat", "section": "Features" },
+        { "type": "fix", "section": "Patches" },
+        { "type": "docs", "section": "Documentation", "hidden": true }
       ]
     }
   }
