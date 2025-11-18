@@ -26,7 +26,7 @@ class AI:
                     + "  <objective>Return a single well-crafted commit message.</objective>\n"
                     + "</objectives>\n"
                     + "<guidelines>\n"
-                    + "  <guideline>Mirror the style conventions observed in the recent logs. (tense, tags, emoji, prefixes)</guideline>\n"
+                    + "  <guideline>Mirror the style conventions observed in the recent logs. (e.g. tense, tags, emoji, prefixes)</guideline>\n"
                     + "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; each line should stay under 72 characters.</guideline>\n"
                     + "</guidelines>",
                 ),
