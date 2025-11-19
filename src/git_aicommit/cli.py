@@ -71,7 +71,10 @@ def root(ctx: click.Context):
 
     history: list[BaseMessage] = []
     while True:
-        with Halo(text="Generating commit message...", spinner="dots"):
+        with Halo(
+            text=f"Generating commit message... \033[90m({provider.name}/{provider.model_name})\033[0m",
+            spinner="dots",
+        ):
             message = ai.generate_commit_message(
                 recent_logs=recent_logs, diff=diff, history=history
             )
