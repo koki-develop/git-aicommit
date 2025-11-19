@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/koki-develop/git-aicommit/compare/v0.5.0...v0.5.1) (2025-11-19)
+
+
+### Patches
+
+* clarify commit message body formatting guideline ([a57f1a4](https://github.com/koki-develop/git-aicommit/commit/a57f1a4e43803c7815cf70bdea6068f041c2bbe1))
+
 ## [0.5.0](https://github.com/koki-develop/git-aicommit/compare/v0.4.0...v0.5.0) (2025-11-18)
 
 
