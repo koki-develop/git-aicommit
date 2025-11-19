@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://github.com/koki-develop/git-aicommit/compare/v0.5.1...v0.6.0) (2025-11-19)
+
+
+### Features
+
+* show provider/model in spinner output ([9199bd7](https://github.com/koki-develop/git-aicommit/commit/9199bd7217d147bae59590b656e4e21de03b2a41))
+
+
+### Patches
+
+* enforce strict config validation ([8314c15](https://github.com/koki-develop/git-aicommit/commit/8314c151b9e19e2ab26a3c52f66653b064e7add0))
+
 ## [0.5.1](https://github.com/koki-develop/git-aicommit/compare/v0.5.0...v0.5.1) (2025-11-19)
 
 
