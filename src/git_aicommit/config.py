@@ -1,29 +1,44 @@
 from typing import Optional, Literal, Self
 from pathlib import Path
 from yaml import safe_load
-from pydantic import BaseModel, SecretStr, Field, ValidationError, model_validator
+from pydantic import (
+    BaseModel,
+    SecretStr,
+    Field,
+    ValidationError,
+    model_validator,
+    ConfigDict,
+)
 from git_aicommit.error import InvalidConfigurationError
 
 
 class AWSBedrockConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     model: str
     region: str
     temperature: float = 0.0
 
 
 class AnthropicConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     model: str
     api_key: SecretStr = Field(alias="api-key")
     temperature: float = 0.0
 
 
 class GoogleGenAIConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     model: str
     api_key: SecretStr = Field(alias="api-key")
     temperature: float = 0.0
 
 
 class OllamaConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     model: str
     base_url: str = Field(
         default="http://localhost:11434",
@@ -33,12 +48,16 @@ class OllamaConfig(BaseModel):
 
 
 class OpenAIConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     model: str
     api_key: SecretStr = Field(alias="api-key")
     temperature: float = 0.0
 
 
 class Config(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
     provider: Literal["aws-bedrock", "anthropic", "google-genai", "ollama", "openai"]
     aws_bedrock: Optional[AWSBedrockConfig] = Field(default=None, alias="aws-bedrock")
     anthropic: Optional[AnthropicConfig] = None
