@@ -9,7 +9,8 @@ from rich.prompt import Prompt
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
-from git_aicommit.config import load_config, Config
+from git_aicommit.provider import provider_from_config
+from git_aicommit.config import load_config
 from git_aicommit.git import Git
 from git_aicommit.ai import AI
 from git_aicommit.error import (
@@ -18,12 +19,6 @@ from git_aicommit.error import (
     ConfigurationAlreadyExistsError,
 )
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
-from langchain_core.language_models import BaseChatModel
-from langchain_anthropic import ChatAnthropic
-from langchain_aws import ChatBedrockConverse
-from langchain_google_genai import ChatGoogleGenerativeAI
-from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
 
 console = Console(highlight=False)
 
@@ -52,58 +47,6 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
             return "quit"
 
 
-def _load_model(config: Config) -> BaseChatModel:
-    if config.provider == "aws-bedrock":
-        if config.aws_bedrock is None:
-            raise ValueError("AWS Bedrock configuration is missing.")
-        return ChatBedrockConverse(
-            model=config.aws_bedrock.model,
-            region_name=config.aws_bedrock.region,
-            temperature=config.aws_bedrock.temperature,
-        )
-
-    elif config.provider == "anthropic":
-        if config.anthropic is None:
-            raise ValueError("Anthropic configuration is missing.")
-        return ChatAnthropic(
-            model_name=config.anthropic.model,
-            api_key=config.anthropic.api_key,
-            temperature=config.anthropic.temperature,
-            timeout=None,
-            stop=None,
-        )
-
-    elif config.provider == "google-genai":
-        if config.google_genai is None:
-            raise ValueError("Google GenAI configuration is missing.")
-        return ChatGoogleGenerativeAI(
-            model=config.google_genai.model,
-            google_api_key=config.google_genai.api_key,
-            temperature=config.google_genai.temperature,
-        )
-
-    elif config.provider == "ollama":
-        if config.ollama is None:
-            raise ValueError("Ollama configuration is missing.")
-        return ChatOllama(
-            model=config.ollama.model,
-            temperature=config.ollama.temperature,
-            base_url=config.ollama.base_url,
-        )
-
-    elif config.provider == "openai":
-        if config.openai is None:
-            raise ValueError("OpenAI configuration is missing.")
-        return ChatOpenAI(
-            model=config.openai.model,
-            api_key=config.openai.api_key,
-            temperature=config.openai.temperature,
-        )
-
-    else:
-        raise ValueError(f"Unsupported provider: {config.provider}")
-
-
 @click.group("git-aicommit", invoke_without_command=True)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
@@ -114,9 +57,9 @@ def root(ctx: click.Context):
         return
 
     config = load_config()
-    model = _load_model(config)
+    provider = provider_from_config(config)
 
-    ai = AI(model=model)
+    ai = AI(model=provider.chat_model)
     git = Git(".")
 
     if not git.is_staged():
