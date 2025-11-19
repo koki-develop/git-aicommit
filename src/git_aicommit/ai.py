@@ -27,7 +27,7 @@ class AI:
                     + "</objectives>\n"
                     + "<guidelines>\n"
                     + "  <guideline>Mirror the style conventions observed in the recent logs. (e.g. tense, tags, emoji, prefixes)</guideline>\n"
-                    + "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; each line should stay under 72 characters.</guideline>\n"
+                    + "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; use bullet points for multiple discrete changes, or paragraph style for single coherent explanations. Each line should stay under 72 characters.</guideline>\n"
                     + "</guidelines>",
                 ),
                 ("human", "<recent-logs>{logs}</recent-logs><diff>{diff}</diff>"),
