@@ -3,7 +3,7 @@ from git import Repo
 
 class Git:
     def __init__(self, path: str):
-        self.repo = Repo(path)
+        self.repo = Repo(path, search_parent_directories=True)
 
     def logs(self, max_count: int) -> list[str]:
         return [
