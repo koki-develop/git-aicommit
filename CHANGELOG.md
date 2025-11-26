@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/koki-develop/git-aicommit/compare/v0.7.0...v0.8.0) (2025-11-26)
+
+
+### Features
+
+* retry on commit failure with interactive prompt ([22b70ee](https://github.com/koki-develop/git-aicommit/commit/22b70eece68c7596ba249a1aafa395ad3095db1e))
+
 ## [0.7.0](https://github.com/koki-develop/git-aicommit/compare/v0.6.0...v0.7.0) (2025-11-26)
 
 
