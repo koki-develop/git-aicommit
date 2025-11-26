@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/koki-develop/git-aicommit/compare/v0.6.0...v0.7.0) (2025-11-26)
+
+
+### Features
+
+* enable Repo search in parent directories ([ac083bb](https://github.com/koki-develop/git-aicommit/commit/ac083bbf3b363f88afb27e7c9fbe90d77b3b175a))
+
 ## [0.6.0](https://github.com/koki-develop/git-aicommit/compare/v0.5.1...v0.6.0) (2025-11-19)
 
 
