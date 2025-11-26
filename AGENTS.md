@@ -7,7 +7,7 @@ git-aicommit is a Python CLI tool that generates commit messages using AI. It an
 ## Development Setup
 
 This project uses:
-- **Python 3.13.7** managed via mise (`mise.toml`)
+- **Python 3.14.0** managed via mise (`mise.toml`)
 - **uv** as the package manager (modern Python package/project manager)
 - **setuptools** for building (pyproject.toml build-backend)
 
