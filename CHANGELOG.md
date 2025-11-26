@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/koki-develop/git-aicommit/compare/v0.8.0...v0.8.1) (2025-11-26)
+
+
+### Patches
+
+* suppress Pydantic V1 warning on Python 3.14+ ([9d17faa](https://github.com/koki-develop/git-aicommit/commit/9d17faa9ec13006eaf8f83c38146efc1634f6205))
+
 ## [0.8.0](https://github.com/koki-develop/git-aicommit/compare/v0.7.0...v0.8.0) (2025-11-26)
 
 
