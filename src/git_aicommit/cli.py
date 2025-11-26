@@ -5,7 +5,7 @@ from importlib.metadata import version
 import readchar
 import click
 from halo import Halo
-from rich.prompt import Prompt
+from rich.prompt import Prompt, Confirm
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
@@ -85,9 +85,17 @@ def root(ctx: click.Context):
         print()
 
         if action == "commit":
-            with Halo(text="Committing changes...", spinner="dots"):
-                git.commit(message)
-            console.print("[bold green]Committed successfully![/bold green]")
+            while True:
+                try:
+                    with Halo(text="Committing changes...", spinner="dots"):
+                        git.commit(message)
+                    console.print("[bold green]Committed successfully![/bold green]")
+                    break
+                except Exception as e:
+                    console.print(f"[bold red]Commit failed:[/bold red] {e}")
+                    print()
+                    if not Confirm.ask("Retry?"):
+                        raise
             break
 
         elif action == "regenerate":
