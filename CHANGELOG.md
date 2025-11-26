@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/koki-develop/git-aicommit/compare/v0.8.1...v0.9.0) (2025-11-26)
+
+
+### Features
+
+* add --include-lockfiles option and lockfile exclusions ([e0fe808](https://github.com/koki-develop/git-aicommit/commit/e0fe80831b431699f0c8f7f1e41a3e87e56a8459))
+
 ## [0.8.1](https://github.com/koki-develop/git-aicommit/compare/v0.8.0...v0.8.1) (2025-11-26)
 
 
