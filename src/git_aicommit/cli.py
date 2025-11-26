@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Literal
 from xml.sax.saxutils import escape as xml_escape
 from importlib.metadata import version
+from time import time
 import readchar
 import click
 from halo import Halo
@@ -25,9 +26,9 @@ from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 console = Console(highlight=False)
 
 
-def _preview_message(message: str) -> None:
+def _preview_message(message: str, elapsed_seconds: float) -> None:
     console.print(
-        Markdown("**Generated Commit Message:**\n\n"),
+        f"[bold]Generated Commit Message:[/bold] [dim]({elapsed_seconds:.2f}s)[/dim]",
         Padding(
             Markdown(
                 f"```\n{message}\n```\n\n"
@@ -90,6 +91,7 @@ def root(ctx: click.Context, include_lockfiles: bool):
 
     history: list[BaseMessage] = []
     while True:
+        start_time = time()
         with Halo(
             text=f"Generating commit message... \033[90m({provider.name}/{provider.model_name})\033[0m",
             spinner="dots",
@@ -97,8 +99,9 @@ def root(ctx: click.Context, include_lockfiles: bool):
             message = ai.generate_commit_message(
                 recent_logs=recent_logs, diff=diff, history=history
             )
+        elapsed_seconds = time() - start_time
         history.append(AIMessage(message))
-        _preview_message(message)
+        _preview_message(message, elapsed_seconds)
 
         action = _read_action()
         print()
