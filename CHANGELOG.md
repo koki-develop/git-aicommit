@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.0](https://github.com/koki-develop/git-aicommit/compare/v0.9.0...v0.10.0) (2025-11-26)
+
+
+### Features
+
+* add elapsed time display to commit message preview ([06f6f04](https://github.com/koki-develop/git-aicommit/commit/06f6f0493345e8fea9297979f68329e7a3811eab))
+
 ## [0.9.0](https://github.com/koki-develop/git-aicommit/compare/v0.8.1...v0.9.0) (2025-11-26)
 
 
