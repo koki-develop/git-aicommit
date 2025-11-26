@@ -10,3 +10,6 @@ if os.getenv("DEBUG") != "true":
         module="langchain_core._api.deprecation",
         message="Core Pydantic V1 functionality isn't compatible with Python 3.14 or greater.",
     )
+
+
+DEFAULT_EXCLUDE_FILES = ["package-lock.json", "pnpm-lock.yaml", "bun.lockb", "*.lock"]

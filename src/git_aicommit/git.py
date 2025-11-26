@@ -15,12 +15,28 @@ class Git:
             for commit in self.repo.iter_commits("HEAD", max_count=max_count)
         ]
 
-    def is_staged(self) -> bool:
-        return self.repo.is_dirty(index=True, working_tree=False)
-
-    def diff(self) -> str:
+    def staged_files(self, exclude_files: list[str]) -> list[str]:
         return self.repo.git.execute(
-            ["git", "diff", "--staged"],
+            [
+                "git",
+                "diff",
+                "--staged",
+                "--name-only",
+                *(f":(exclude){file}" for file in exclude_files),
+            ],
+            with_extended_output=False,
+            as_process=False,
+            stdout_as_string=True,
+        ).splitlines()
+
+    def diff(self, exclude_files: list[str]) -> str:
+        return self.repo.git.execute(
+            [
+                "git",
+                "diff",
+                "--staged",
+                *(f":(exclude){file}" for file in exclude_files),
+            ],
             with_extended_output=False,
             as_process=False,
             stdout_as_string=True,

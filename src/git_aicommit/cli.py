@@ -9,6 +9,7 @@ from rich.prompt import Prompt, Confirm
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
+from git_aicommit import DEFAULT_EXCLUDE_FILES
 from git_aicommit.provider import provider_from_config
 from git_aicommit.config import load_config
 from git_aicommit.git import Git
@@ -19,6 +20,7 @@ from git_aicommit.error import (
     ConfigurationAlreadyExistsError,
 )
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
+
 
 console = Console(highlight=False)
 
@@ -48,10 +50,13 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
 
 
 @click.group("git-aicommit", invoke_without_command=True)
+@click.option(
+    "--include-lockfiles", is_flag=True, default=False, help="Include lock files."
+)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
 @error_handle
-def root(ctx: click.Context):
+def root(ctx: click.Context, include_lockfiles: bool):
     """Generate commit messages using AI."""
     if ctx.invoked_subcommand is not None:
         return
@@ -62,11 +67,25 @@ def root(ctx: click.Context):
     ai = AI(model=provider.chat_model)
     git = Git(".")
 
-    if not git.is_staged():
+    exclude_files = DEFAULT_EXCLUDE_FILES if not include_lockfiles else []
+
+    if not git.staged_files(exclude_files=exclude_files):
         console.print("No staged changes found.")
+        ignored_files = git.staged_files(exclude_files=[])
+        if ignored_files:
+            print()
+            console.print(
+                "[bold yellow]NOTE[/bold yellow]: The following files are staged but ignored:"
+            )
+            for file in ignored_files:
+                console.print(f" - {file}")
+
+            console.print(
+                "\nUse [bold green]--include-lockfiles[/bold green] to include them."
+            )
         return
 
-    diff = git.diff()
+    diff = git.diff(exclude_files=exclude_files)
     recent_logs = git.logs(max_count=10)
 
     history: list[BaseMessage] = []
