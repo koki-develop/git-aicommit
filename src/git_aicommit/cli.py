@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from typing import Literal
 from xml.sax.saxutils import escape as xml_escape
@@ -10,7 +11,8 @@ from rich.prompt import Prompt, Confirm
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
-from git_aicommit import DEFAULT_EXCLUDE_FILES
+from langsmith import tracing_context
+from git_aicommit import DEBUG_ENABLED, DEFAULT_EXCLUDE_FILES
 from git_aicommit.provider import provider_from_config
 from git_aicommit.config import load_config
 from git_aicommit.git import Git
@@ -96,9 +98,13 @@ def root(ctx: click.Context, include_lockfiles: bool):
             text=f"Generating commit message... \033[90m({provider.name}/{provider.model_name})\033[0m",
             spinner="dots",
         ):
-            message = ai.generate_commit_message(
-                recent_logs=recent_logs, diff=diff, history=history
-            )
+            with tracing_context(
+                enabled=os.getenv("GIT_AICOMMIT_LANGSMITH_PROJECT") is not None,
+                project_name=os.getenv("GIT_AICOMMIT_LANGSMITH_PROJECT"),
+            ):
+                message = ai.generate_commit_message(
+                    recent_logs=recent_logs, diff=diff, history=history
+                )
         elapsed_seconds = time() - start_time
         history.append(AIMessage(message))
         _preview_message(message, elapsed_seconds)
