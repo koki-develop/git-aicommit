@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/koki-develop/git-aicommit/compare/v0.10.0...v0.10.1) (2025-11-30)
+
+
+### Patches
+
+* add LangSmith tracing context to commit message generation ([55c2d6e](https://github.com/koki-develop/git-aicommit/commit/55c2d6e1016c72db5002566e71508a11f8c994d3))
+
 ## [0.10.0](https://github.com/koki-develop/git-aicommit/compare/v0.9.0...v0.10.0) (2025-11-26)
 
 
