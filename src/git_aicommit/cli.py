@@ -12,7 +12,7 @@ from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
 from langsmith import tracing_context
-from git_aicommit import DEBUG_ENABLED, DEFAULT_EXCLUDE_FILES
+from git_aicommit import DEFAULT_EXCLUDE_FILES
 from git_aicommit.provider import provider_from_config
 from git_aicommit.config import load_config
 from git_aicommit.git import Git
