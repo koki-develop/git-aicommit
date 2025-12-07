@@ -7,7 +7,7 @@ from time import time
 import readchar
 import click
 from halo import Halo
-from rich.prompt import Prompt, Confirm
+from rich.prompt import Confirm
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.padding import Padding
@@ -22,6 +22,7 @@ from git_aicommit.error import (
     AbortCommitError,
     ConfigurationAlreadyExistsError,
 )
+from git_aicommit.prompt import prompt
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 
 
@@ -127,9 +128,7 @@ def root(ctx: click.Context, include_lockfiles: bool):
             break
 
         elif action == "regenerate":
-            feedback = Prompt.ask(
-                "[bold]Provide feedback to refine the commit message[/bold]"
-            )
+            feedback = prompt("Provide feedback to refine the commit message")
             if not feedback.strip():
                 raise AbortCommitError()
             print()
