@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.11.0](https://github.com/koki-develop/git-aicommit/compare/v0.10.1...v0.11.0) (2025-12-07)
+
+
+### Features
+
+* enhance feedback input with prompt_toolkit prompt ([cbd636f](https://github.com/koki-develop/git-aicommit/commit/cbd636fb6c856adfe00327d84fb1be644992593a))
+
 ## [0.10.1](https://github.com/koki-develop/git-aicommit/compare/v0.10.0...v0.10.1) (2025-11-30)
 
 
