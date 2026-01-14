@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Literal
+from typing import Literal, Optional
 from xml.sax.saxutils import escape as xml_escape
 from importlib.metadata import version
 from time import time
@@ -22,7 +22,7 @@ from git_aicommit.error import (
     AbortCommitError,
     ConfigurationAlreadyExistsError,
 )
-from git_aicommit.prompt import prompt
+from git_aicommit.prompt import prompt as prompt_input
 from langchain_core.messages import BaseMessage, HumanMessage, AIMessage
 
 
@@ -57,16 +57,26 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
 @click.option(
     "--include-lockfiles", is_flag=True, default=False, help="Include lock files."
 )
+@click.option(
+    "--prompt",
+    "-p",
+    type=str,
+    default=None,
+    help="Custom instructions for commit message generation.",
+)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
 @error_handle
-def root(ctx: click.Context, include_lockfiles: bool):
+def root(ctx: click.Context, include_lockfiles: bool, prompt: Optional[str]):
     """Generate commit messages using AI."""
     if ctx.invoked_subcommand is not None:
         return
 
     config = load_config()
     provider = provider_from_config(config)
+
+    # Resolve user instructions: CLI option takes priority over config file
+    user_instructions = prompt if prompt is not None else config.prompt
 
     ai = AI(model=provider.chat_model)
     git = Git(".")
@@ -104,7 +114,10 @@ def root(ctx: click.Context, include_lockfiles: bool):
                 project_name=os.getenv("GIT_AICOMMIT_LANGSMITH_PROJECT"),
             ):
                 message = ai.generate_commit_message(
-                    recent_logs=recent_logs, diff=diff, history=history
+                    recent_logs=recent_logs,
+                    diff=diff,
+                    history=history,
+                    user_instructions=user_instructions,
                 )
         elapsed_seconds = time() - start_time
         history.append(AIMessage(message))
@@ -128,7 +141,7 @@ def root(ctx: click.Context, include_lockfiles: bool):
             break
 
         elif action == "regenerate":
-            feedback = prompt("Provide feedback to refine the commit message")
+            feedback = prompt_input("Provide feedback to refine the commit message")
             if not feedback.strip():
                 raise AbortCommitError()
             print()
@@ -157,6 +170,10 @@ def init():
 
     # Sample configuration with all providers commented out
     sample_config = """# Uncomment and configure one of the providers below
+
+# Custom instructions for commit message generation (optional)
+# prompt: "Write commit messages in Japanese"
+# prompt: "Follow Conventional Commits format (feat:, fix:, docs:, etc.)"
 
 # Amazon Bedrock
 # provider: aws-bedrock

@@ -1,3 +1,4 @@
+from typing import Optional
 from xml.sax.saxutils import escape as xml_escape
 from langchain_core.messages import BaseMessage
 from langchain_core.language_models import BaseChatModel
@@ -14,22 +15,32 @@ class AI:
         self.model = model
 
     def generate_commit_message(
-        self, recent_logs: list[str], diff: str, history: list[BaseMessage]
+        self,
+        recent_logs: list[str],
+        diff: str,
+        history: list[BaseMessage],
+        user_instructions: Optional[str] = None,
     ) -> str:
+        system_prompt = (
+            "<persona>You are a seasoned software engineer and Git expert who writes precise commit messages.</persona>\n"
+            "<objectives>\n"
+            "  <objective>Study the provided diff to understand what changed and why.</objective>\n"
+            "  <objective>Return a single well-crafted commit message.</objective>\n"
+            "</objectives>\n"
+            "<guidelines>\n"
+            "  <guideline>Mirror the style conventions observed in the recent logs. (e.g. tense, tags, emoji, prefixes)</guideline>\n"
+            "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; use bullet points for multiple discrete changes, or paragraph style for single coherent explanations. Each line should stay under 72 characters.</guideline>\n"
+            "</guidelines>"
+        )
+
+        if user_instructions:
+            system_prompt += (
+                f"\n<user-instructions>{xml_escape(user_instructions)}</user-instructions>"
+            )
+
         prompt_template = ChatPromptTemplate.from_messages(
             [
-                (
-                    "system",
-                    "<persona>You are a seasoned software engineer and Git expert who writes precise commit messages.</persona>\n"
-                    + "<objectives>\n"
-                    + "  <objective>Study the provided diff to understand what changed and why.</objective>\n"
-                    + "  <objective>Return a single well-crafted commit message.</objective>\n"
-                    + "</objectives>\n"
-                    + "<guidelines>\n"
-                    + "  <guideline>Mirror the style conventions observed in the recent logs. (e.g. tense, tags, emoji, prefixes)</guideline>\n"
-                    + "  <guideline>Add one or two short follow-up lines when necessary to clarify scope or motivation; use bullet points for multiple discrete changes, or paragraph style for single coherent explanations. Each line should stay under 72 characters.</guideline>\n"
-                    + "</guidelines>",
-                ),
+                ("system", system_prompt),
                 ("human", "<recent-logs>{logs}</recent-logs><diff>{diff}</diff>"),
                 MessagesPlaceholder("history"),
             ]
