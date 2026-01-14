@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.12.0](https://github.com/koki-develop/git-aicommit/compare/v0.11.0...v0.12.0) (2026-01-14)
+
+
+### Features
+
+* add language option for commit message generation ([edeff38](https://github.com/koki-develop/git-aicommit/commit/edeff38ac7fefcea83700ae854545f9426a597ee))
+* add support for custom user instructions in commit message generation ([1f69454](https://github.com/koki-develop/git-aicommit/commit/1f694548fe6dc69ddf939c1f5c592d28c78bead0))
+
 ## [0.11.0](https://github.com/koki-develop/git-aicommit/compare/v0.10.1...v0.11.0) (2025-12-07)
 
 
