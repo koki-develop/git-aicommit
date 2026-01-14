@@ -64,10 +64,22 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
     default=None,
     help="Custom instructions for commit message generation.",
 )
+@click.option(
+    "--language",
+    "-l",
+    type=str,
+    default=None,
+    help="Language for commit message generation (e.g., English, Japanese).",
+)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
 @error_handle
-def root(ctx: click.Context, include_lockfiles: bool, prompt: Optional[str]):
+def root(
+    ctx: click.Context,
+    include_lockfiles: bool,
+    prompt: Optional[str],
+    language: Optional[str],
+):
     """Generate commit messages using AI."""
     if ctx.invoked_subcommand is not None:
         return
@@ -77,6 +89,9 @@ def root(ctx: click.Context, include_lockfiles: bool, prompt: Optional[str]):
 
     # Resolve user instructions: CLI option takes priority over config file
     user_instructions = prompt if prompt is not None else config.prompt
+
+    # Resolve language: CLI option takes priority over config file
+    resolved_language = language if language is not None else config.language
 
     ai = AI(model=provider.chat_model)
     git = Git(".")
@@ -118,6 +133,7 @@ def root(ctx: click.Context, include_lockfiles: bool, prompt: Optional[str]):
                     diff=diff,
                     history=history,
                     user_instructions=user_instructions,
+                    language=resolved_language,
                 )
         elapsed_seconds = time() - start_time
         history.append(AIMessage(message))
@@ -172,8 +188,11 @@ def init():
     sample_config = """# Uncomment and configure one of the providers below
 
 # Custom instructions for commit message generation (optional)
-# prompt: "Write commit messages in Japanese"
 # prompt: "Follow Conventional Commits format (feat:, fix:, docs:, etc.)"
+
+# Language for commit message generation (optional)
+# language: "English"
+# language: "Japanese"
 
 # Amazon Bedrock
 # provider: aws-bedrock

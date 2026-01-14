@@ -60,6 +60,7 @@ class Config(BaseModel):
 
     provider: Literal["aws-bedrock", "anthropic", "google-genai", "ollama", "openai"]
     prompt: Optional[str] = None
+    language: Optional[str] = None
     aws_bedrock: Optional[AWSBedrockConfig] = Field(default=None, alias="aws-bedrock")
     anthropic: Optional[AnthropicConfig] = None
     google_genai: Optional[GoogleGenAIConfig] = Field(

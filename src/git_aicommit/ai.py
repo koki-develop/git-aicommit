@@ -20,6 +20,7 @@ class AI:
         diff: str,
         history: list[BaseMessage],
         user_instructions: Optional[str] = None,
+        language: Optional[str] = None,
     ) -> str:
         system_prompt = (
             "<persona>You are a seasoned software engineer and Git expert who writes precise commit messages.</persona>\n"
@@ -33,10 +34,13 @@ class AI:
             "</guidelines>"
         )
 
-        if user_instructions:
+        if language:
             system_prompt += (
-                f"\n<user-instructions>{xml_escape(user_instructions)}</user-instructions>"
+                f"\n<output-language>{xml_escape(language)}</output-language>"
             )
+
+        if user_instructions:
+            system_prompt += f"\n<user-instructions>{xml_escape(user_instructions)}</user-instructions>"
 
         prompt_template = ChatPromptTemplate.from_messages(
             [
