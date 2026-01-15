@@ -94,39 +94,86 @@ class Config(BaseModel):
         return self
 
 
-def load_config() -> Config:
-    config_path = find_config_path()
-    if config_path is None:
-        raise FileNotFoundError("Configuration file not found.")
+def find_all_config_paths() -> list[Path]:
+    """
+    Search for all config files from CWD up to the root directory.
 
-    with open(config_path, "r") as f:
-        try:
-            data = safe_load(f)
-        except Exception as e:
-            raise InvalidConfigurationError(f"YAML parsing error: {str(e)}") from e
-
-    if data is None:
-        raise InvalidConfigurationError("Configuration file is empty.")
-
-    try:
-        return Config(**data)
-    except ValidationError as e:
-        raise InvalidConfigurationError(str(e)) from e
-
-
-def find_config_path() -> Optional[str]:
+    Returns:
+        List of config file paths. Index 0 has the highest priority (closest to CWD).
+    """
     filenames = [
         ".aicommit.yml",
         "aicommit.yml",
         ".aicommit.yaml",
         "aicommit.yaml",
     ]
+
+    config_paths: list[Path] = []
     current = Path.cwd()
 
     for parent in [current] + list(current.parents):
         for filename in filenames:
             config_path = parent / filename
             if config_path.is_file():
-                return str(config_path)
+                config_paths.append(config_path)
+                break  # Only one file per directory
 
-    return None
+    return config_paths
+
+
+def merge_configs(config_dicts: list[dict]) -> dict:
+    """
+    Merge multiple config dictionaries by priority.
+
+    Args:
+        config_dicts: List of config dicts. Index 0 has the highest priority.
+
+    Returns:
+        Merged config dictionary.
+    """
+    if not config_dicts:
+        return {}
+
+    merged: dict = {}
+
+    # Merge from lowest priority (end of list) to highest
+    for config in reversed(config_dicts):
+        if config is None:
+            continue
+        for key, value in config.items():
+            if value is not None:
+                merged[key] = value  # Shallow merge: overwrite entire key
+
+    return merged
+
+
+def load_config() -> Config:
+    config_paths = find_all_config_paths()
+
+    if not config_paths:
+        raise FileNotFoundError("Configuration file not found.")
+
+    # Load all config files as dictionaries
+    config_dicts: list[dict] = []
+    for config_path in config_paths:
+        try:
+            with open(config_path, "r") as f:
+                data = safe_load(f)
+                if data is not None:
+                    config_dicts.append(data)
+        except Exception as e:
+            raise InvalidConfigurationError(
+                f"YAML parsing error in {config_path}: {str(e)}"
+            ) from e
+
+    if not config_dicts:
+        raise InvalidConfigurationError("All configuration files are empty.")
+
+    # Merge configs
+    merged_data = merge_configs(config_dicts)
+
+    # Validate with Pydantic
+    try:
+        return Config(**merged_data)
+    except ValidationError as e:
+        raise InvalidConfigurationError(str(e)) from e
