@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/koki-develop/git-aicommit/compare/v0.12.0...v0.13.0) (2026-01-15)
+
+
+### Features
+
+* **config:** support loading and merging multiple config files ([75e4e9b](https://github.com/koki-develop/git-aicommit/commit/75e4e9bf6d4b00aee9a5ea03ae181f5056e29411))
+
 ## [0.12.0](https://github.com/koki-develop/git-aicommit/compare/v0.11.0...v0.12.0) (2026-01-14)
 
 
