@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.0](https://github.com/koki-develop/git-aicommit/compare/v0.13.0...v0.14.0) (2026-01-25)
+
+
+### Features
+
+* **cli:** add --yes/-y option to skip confirmation and commit immediately ([cfa98fd](https://github.com/koki-develop/git-aicommit/commit/cfa98fd4d808667951f234c4148bc912103fbc56))
+
 ## [0.13.0](https://github.com/koki-develop/git-aicommit/compare/v0.12.0...v0.13.0) (2026-01-15)
 
 
