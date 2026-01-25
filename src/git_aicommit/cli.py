@@ -71,6 +71,13 @@ def _read_action() -> Literal["commit", "regenerate", "quit"]:
     default=None,
     help="Language for commit message generation (e.g., English, Japanese).",
 )
+@click.option(
+    "--yes",
+    "-y",
+    is_flag=True,
+    default=False,
+    help="Skip confirmation and commit immediately.",
+)
 @click.version_option(version("git-aicommit"), prog_name="git-aicommit")
 @click.pass_context
 @error_handle
@@ -79,6 +86,7 @@ def root(
     include_lockfiles: bool,
     prompt: Optional[str],
     language: Optional[str],
+    yes: bool,
 ):
     """Generate commit messages using AI."""
     if ctx.invoked_subcommand is not None:
@@ -139,7 +147,10 @@ def root(
         history.append(AIMessage(message))
         _preview_message(message, elapsed_seconds)
 
-        action = _read_action()
+        if yes:
+            action = "commit"
+        else:
+            action = _read_action()
         print()
 
         if action == "commit":
