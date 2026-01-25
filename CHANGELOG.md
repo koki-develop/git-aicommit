@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/koki-develop/git-aicommit/compare/v0.14.0...v0.14.1) (2026-01-25)
+
+
+### Patches
+
+* **cli:** show action keys prompt before reading user input ([e21b4ee](https://github.com/koki-develop/git-aicommit/commit/e21b4ee462dbad5c64cde9ede784588b9b31f509))
+
 ## [0.14.0](https://github.com/koki-develop/git-aicommit/compare/v0.13.0...v0.14.0) (2026-01-25)
 
 
