@@ -33,10 +33,16 @@ def _preview_message(message: str, elapsed_seconds: float) -> None:
     console.print(
         f"[bold]Generated Commit Message:[/bold] [dim]({elapsed_seconds:.2f}s)[/dim]",
         Padding(
-            Markdown(
-                f"```\n{message}\n```\n\n"
-                + "`c`: Commit message / `r`: Regenerate / `q`: Quit"
-            ),
+            Markdown(f"```\n{message}\n```"),
+            (1, 1, 0, 1),
+        ),
+    )
+
+
+def _print_action_keys() -> None:
+    console.print(
+        Padding(
+            Markdown("`c`: Commit message / `r`: Regenerate / `q`: Quit"),
             (1, 1, 0, 1),
         ),
     )
@@ -150,6 +156,7 @@ def root(
         if yes:
             action = "commit"
         else:
+            _print_action_keys()
             action = _read_action()
         print()
 
